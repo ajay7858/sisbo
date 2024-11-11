@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Roller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #282c34;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #3c3f41;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            color: #f39c12; /* Gold color */
+        }
+
+        #dice {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .die {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            margin: 0 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            background-color: #ffffff;
+            color: #333;
+            transition: transform 0.2s ease;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .die.flip {
+            animation: flip 0.5s forwards;
+        }
+
+        @keyframes flip {
+            0% {
+                transform: rotateY(0);
+            }
+            50% {
+                transform: rotateY(180deg);
+            }
+            100% {
+                transform: rotateY(0);
+            }
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            background-color: #e67e22; /* Orange color */
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 20px; /* Space above button */
+        }
+
+        button:hover {
+            background-color: #d35400; /* Darker orange */
+            transform: scale(1.05);
+        }
+
+        h2 {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+
+        #total {
+            color: #f39c12; /* Gold color */
+            font-weight: bold;
+        }
+
+        #size {
+            font-size: 2em;
+            margin-top: 10px;
+            color: #ffffff;
+        }
+
+        .big {
+            color: #27ae60; /* Green for Big */
+            font-weight: bold;
+        }
+
+        .small {
+            color: #e74c3c; /* Red for Small */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dice Roller</h1>
+        <div id="dice">
+            <div class="die" id="die1"></div>
+            <div class="die" id="die2"></div>
+            <div class="die" id="die3"></div>
+        </div>
+        <h2>Total: <span id="total">0</span></h2>
+        <div id="size"></div> <!-- This will show "Big" or "Small" -->
+        <button id="rollButton">Roll Dice</button>
+    </div>
+    <script>
+        document.getElementById('rollButton').addEventListener('click', function() {
+            const dice = document.querySelectorAll('.die');
+            dice.forEach(die => {
+                die.classList.add('flip');
+            });
+
+            setTimeout(() => {
+                let die1 = Math.floor(Math.random() * 6) + 1;
+                let die2 = Math.floor(Math.random() * 6) + 1;
+                let die3 = Math.floor(Math.random() * 6) + 1;
+
+                document.getElementById('die1').textContent = die1;
+                document.getElementById('die2').textContent = die2;
+                document.getElementById('die3').textContent = die3;
+
+                let total = die1 + die2 + die3;
+                document.getElementById('total').textContent = total;
+
+                const sizeMessage = document.getElementById('size');
+                sizeMessage.classList.remove('big', 'small'); // Clear previous classes
+                
+                // Update condition for Big and Small
+                if (total >= 4 && total <= 10) {
+                    sizeMessage.textContent = "Small";
+                    sizeMessage.classList.add("small");
+                } else if (total >= 11 && total <= 17) {
+                    sizeMessage.textContent = "Big";
+                    sizeMessage.classList.add("big");
+                } else {
+                    sizeMessage.textContent = ""; // Clear message if total is out of range
+                }
+
+                // Clear result and dice values after 30 seconds
+                setTimeout(() => {
+                    sizeMessage.textContent = "";
+                    document.getElementById('die1').textContent = '';
+                    document.getElementById('die2').textContent = '';
+                    document.getElementById('die3').textContent = '';
+                    document.getElementById('total').textContent = '0'; // Reset total
+                }, 30000); // 30000 ms = 30 seconds
+
+                dice.forEach(die => {
+                    die.classList.remove('flip');
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>
